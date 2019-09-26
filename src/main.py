@@ -2,11 +2,14 @@ from Crypto.Cipher import AES
 from Crypto.Util import Counter
 from Crypto import Random
 
+
 def pad(text, block_size):
     return text + (block_size - len(text) % block_size) * chr(block_size - len(text) % block_size)
 
+
 def unpad(text):
     return text[0:-ord(text[-1])]
+
 
 def decrypt_AES_CBC(ciphertext, key):
     b_text = bytes.fromhex(ciphertext[32:])
@@ -16,6 +19,7 @@ def decrypt_AES_CBC(ciphertext, key):
     cipher = AES.new(b_key, AES.MODE_CBC, b_iv)
     return cipher.decrypt(b_text).decode('utf-8')
 
+
 def decrypt_AES_CTR(ciphertext, key, iv):
     b_text = bytes.fromhex(ciphertext)
     b_key = bytes.fromhex(key)
@@ -24,6 +28,7 @@ def decrypt_AES_CTR(ciphertext, key, iv):
 
     cipher = AES.new(b_key, AES.MODE_CTR, counter=counter)
     return cipher.decrypt(b_text).decode('utf-8')
+
 
 def encrypt_AES_CBC(plaintext, key):
 
@@ -35,13 +40,15 @@ def encrypt_AES_CBC(plaintext, key):
     cipher = AES.new(b_key, AES.MODE_CBC, iv)
     return (iv + cipher.encrypt(text)).hex()
 
+
 def encrypt_AES_CTR(plaintext, key, iv):
     b_key = bytes.fromhex(key)
-    
+
     counter = Counter.new(128, initial_value=int(iv, AES.block_size))
 
     cipher = AES.new(b_key, AES.MODE_CTR, counter=counter)
     return cipher.encrypt(plaintext).hex()
+
 
 if __name__ == "__main__":
     cbc_key = '140b41b22a29beb4061bda66b6747e14'
